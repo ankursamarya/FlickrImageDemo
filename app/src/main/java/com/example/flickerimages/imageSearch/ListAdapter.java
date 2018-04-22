@@ -21,18 +21,21 @@ import java.util.List;
 public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ImageViewHolder> {
 
     private List<Image> images = new ArrayList<Image>();
+    private View.OnClickListener clickListener;
 
     private final Context mContext;
 
-    public ListAdapter(Context context, List<Image> photos) {
+    public ListAdapter(Context context, List<Image> photos, View.OnClickListener clickListener) {
         this.mContext = context;
         this.images = photos;
+        this.clickListener = clickListener;
     }
 
     @Override
     public ImageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater mInflater = LayoutInflater.from(parent.getContext());
         final View sView = mInflater.inflate(R.layout.item, parent, false);
+        sView.setOnClickListener(clickListener);
         return new ImageViewHolder(sView);
     }
 
@@ -44,6 +47,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ImageViewHolde
                 .placeholder(R.mipmap.ic_launcher)
                 .centerCrop()
                 .into(holder.image);
+        holder.itemView.setTag(R.id.position, position);
     }
 
     @Override
@@ -62,8 +66,5 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.ImageViewHolde
             image = (ImageView) view;
 
         }
-
-
-
     }
 }

@@ -1,8 +1,13 @@
 package com.example.flickerimages;
 
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,9 +23,13 @@ import com.example.flickerimages.imageSearch.ImagesPresenter;
 import com.example.flickerimages.imageSearch.PresenterContract;
 import com.example.flickerimages.imageSearch.ViewContract;
 import com.example.flickerimages.utils.EndlessRecyclerViewScrollListener;
+import com.example.flickerimages.view.SpacesItemDecoration;
+import com.example.flickerimages.viewImage.ViewImageActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.flickerimages.viewImage.ViewImageActivity.ARG_IMAGE_URL;
 
 public class SearchImagesActivity extends AppCompatActivity implements ViewContract, View.OnClickListener {
 
@@ -52,13 +61,17 @@ public class SearchImagesActivity extends AppCompatActivity implements ViewContr
 
         searchTextView = findViewById(R.id.searchImages);
 
-        adapter = new ListAdapter(this, images);
+
         //for grid Layout
         gridLayoutManager = new GridLayoutManager(getApplicationContext(), columnCount);
 
         rvImages = findViewById(R.id.rvImageList);
         rvImages.setLayoutManager(gridLayoutManager);
         rvImages.setItemAnimator(new DefaultItemAnimator());
+
+        rvImages.addItemDecoration(new SpacesItemDecoration(10));
+
+        adapter = new ListAdapter(this, images, this);
         rvImages.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
@@ -137,9 +150,17 @@ public class SearchImagesActivity extends AppCompatActivity implements ViewContr
             case R.id.searchBtn:
                 //search api request
                 presenter.searchImagesResult(searchTextView.getText().toString());
-                break;
+                return;
         }
-
+        //handle click from grid
+        int position = (int) v.getTag(R.id.position);
+        Intent intent = new Intent(SearchImagesActivity.this, ViewImageActivity.class);
+        intent.putExtra(ARG_IMAGE_URL, images.get(position).getUrl());
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(SearchImagesActivity.this,
+                        v,
+                        ViewCompat.getTransitionName(v));
+        startActivity(intent, options.toBundle());
     }
 
     @Override
