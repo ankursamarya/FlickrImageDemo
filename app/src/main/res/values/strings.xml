@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FlickerImagesDemo</string>
+    <string name="col_2">Col 2</string>
+    <string name="col_3">Col 3</string>
+    <string name="col_4">Col 4</string>
+    <string name="something_went_wrong">Something went wrong!</string>
+    <string name="title_activity_view_image">ViewImageActivity</string>
+</resources>
