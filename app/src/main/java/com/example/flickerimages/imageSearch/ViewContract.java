@@ -15,4 +15,6 @@ public interface ViewContract {
 
     void showProgress(boolean show);
 
+    void noMoreImage();
+
 }

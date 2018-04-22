@@ -5,4 +5,5 @@
     <string name="col_4">Col 4</string>
     <string name="something_went_wrong">Something went wrong!</string>
     <string name="title_activity_view_image">ViewImageActivity</string>
+    <string name="no_more_images">No More Images</string>
 </resources>

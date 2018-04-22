@@ -53,14 +53,16 @@ public class SearchImagesActivity extends AppCompatActivity implements ViewContr
         searchTextView = findViewById(R.id.searchImages);
 
         adapter = new ListAdapter(this, images);
+        //for grid Layout
+        gridLayoutManager = new GridLayoutManager(getApplicationContext(), columnCount);
 
         rvImages = findViewById(R.id.rvImageList);
-        gridLayoutManager = new GridLayoutManager(getApplicationContext(), columnCount);
         rvImages.setLayoutManager(gridLayoutManager);
         rvImages.setItemAnimator(new DefaultItemAnimator());
         rvImages.setAdapter(adapter);
 
         scrollListener = new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+            //For pagination
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 presenter.loadMoreImages(searchTextView.getText().toString(), page + 1);
@@ -76,6 +78,7 @@ public class SearchImagesActivity extends AppCompatActivity implements ViewContr
         return true;
     }
 
+    //change column from menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -96,6 +99,7 @@ public class SearchImagesActivity extends AppCompatActivity implements ViewContr
         return super.onOptionsItemSelected(item);
     }
 
+    // show result for first time so it clears adapter then notify adapter
     @Override
     public void showImages(List<Image> imageList) {
         images.clear();
@@ -104,17 +108,7 @@ public class SearchImagesActivity extends AppCompatActivity implements ViewContr
         scrollListener.resetState();
     }
 
-    @Override
-    public void showError() {
-        Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.unbind();
-    }
-
+    //show result for pagination request
     @Override
     public void showMore(List<Image> imageList) {
         images.addAll(imageList);
@@ -127,13 +121,31 @@ public class SearchImagesActivity extends AppCompatActivity implements ViewContr
     }
 
     @Override
+    public void showError() {
+        Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void noMoreImage() {
+        Toast.makeText(this, R.string.no_more_images, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
             case R.id.searchBtn:
+                //search api request
                 presenter.searchImagesResult(searchTextView.getText().toString());
                 break;
         }
 
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.unbind();
+    }
+
 }

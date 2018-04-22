@@ -40,8 +40,12 @@ public class ImagesPresenter implements PresenterContract {
             public void onNext(Data userData) {
                 Log.d(TAG, "onNext: " + userData);
 
-                view.showImages(userData.photos.photo);
                 view.showProgress(false);
+                if (userData.photos.photo.size() == 0) {
+                    view.noMoreImage();
+                    return;
+                }
+                view.showImages(userData.photos.photo);
             }
         });
 
@@ -66,7 +70,10 @@ public class ImagesPresenter implements PresenterContract {
             @Override
             public void onNext(Data userData) {
                 Log.d(TAG, "onNext: " + userData);
-
+                if (userData.photos.photo.size() == 0) {
+                    view.noMoreImage();
+                    return;
+                }
                 view.showMore(userData.photos.photo);
             }
         });
